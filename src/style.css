@@ -8,3 +8,59 @@ footer{min-height:110px;border-top:1px solid var(--line);display:flex;align-item
 @media(max-width:1000px){.header{height:96px}.hero-content{padding-top:151px}h1{font-size:11vw}.art{width:100%;right:-31%;top:-4%;height:100%}}
 @media(max-width:600px){.header{height:88px}.brand{font-size:17px;gap:9px}.brand-mark{width:29px;height:29px}.brand-sub{font-size:11px}.hero{min-height:620px}.hero-content{padding-top:83px}h1{font-size:clamp(50px,13.2vw,85px);letter-spacing:-.07em;line-height:1.03}.hero-description{font-size:14px;margin-top:24px}.art{width:135%;right:-24%;height:75%;top:28%;}.art-halo{background:linear-gradient(180deg,#080808 0%,transparent 22%,transparent 80%,#080808 100%)}footer{min-height:100px;flex-wrap:wrap;font-size:10px;row-gap:14px}.footer-email{order:3;font-size:12px}footer>span{order:2}.footer-name{font-size:11px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+/* The vision shares the hero's palette and typographic voice. */
+main{flex-direction:column}
+.hero{flex:none;min-height:max(620px,calc(100svh - 116px))}
+.thesis-nav{font-size:13px;padding:12px 0}
+.thesis-nav span{margin-left:18px;color:var(--accent)}
+.thesis-nav:hover,.hero-read:hover{color:var(--accent)}
+.hero-read{position:absolute;bottom:36px;left:var(--gutter);z-index:1;font-size:13px;display:flex;align-items:center;gap:28px}
+.hero-read span{color:var(--accent);font-size:21px}
+.thesis{padding:0 var(--gutter);background:#101110;scroll-margin-top:0}
+.thesis-opening{padding:64px 0 88px;border-top:1px solid #454640}
+.vision-label{display:flex;align-items:center;gap:10px;font-size:13px;margin:0 0 55px;color:#b4b4af}
+.vision-label>span{width:6px;height:6px;background:var(--accent);border-radius:50%}
+.thesis-intro{display:grid;grid-template-columns:1.35fr 1fr;gap:8%;align-items:end}
+.thesis-intro h2{font-size:clamp(64px,8.2vw,136px);line-height:1;letter-spacing:-.065em;font-weight:450;margin:0}
+.thesis-intro>p{font-size:clamp(19px,1.8vw,27px);line-height:1.5;letter-spacing:-.025em;max-width:380px;margin:0 0 6px}
+.thesis-body{display:grid;grid-template-columns:1fr 1fr;gap:12%;padding:76px 0 112px;border-top:1px solid var(--line);align-items:start}
+.counterpart{position:sticky;top:48px;margin:0;max-width:520px}
+.counterpart-art{height:clamp(235px,25vw,390px);position:relative;border-bottom:1px solid #585b53;overflow:hidden}
+.counterpart-word,.counterpart-echo{position:absolute;left:0;top:2%;font-family:'Songti SC','Noto Serif CJK SC','SimSun',serif;font-size:clamp(115px,13vw,205px);line-height:1.1;letter-spacing:-.08em;white-space:nowrap;font-weight:400}
+.counterpart-word{color:var(--paper)}
+.counterpart-echo{top:23%;left:15%;color:transparent;-webkit-text-stroke:1px #777a71}
+.connection-point{position:absolute;bottom:0;left:52%;width:1px;height:60px;background:var(--accent)}
+.connection-point::before{content:'';position:absolute;top:0;left:-3px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.counterpart figcaption{font-size:28px;line-height:1.5;letter-spacing:-.04em;padding-top:24px}
+.counterpart figcaption>span{font-size:14px;letter-spacing:0}
+.counterpart .pronunciation{margin-left:8px;color:var(--muted)}
+.world-connection{display:flex;align-items:center;gap:20px;margin-top:42px;font-size:13px}
+.connection-line{flex:1;position:relative;text-align:center;color:var(--accent);font-size:24px;line-height:1}
+.connection-line::before,.connection-line::after{content:'';position:absolute;height:1px;top:50%;width:calc(50% - 17px);background:var(--accent)}
+.connection-line::before{left:0}.connection-line::after{right:0}
+.counterpart-note{font-size:13px;line-height:1.7;color:var(--muted);margin:22px 0 0}
+.essay{max-width:620px}
+.essay section+section{margin-top:60px}
+.essay h3{font-size:clamp(24px,2.2vw,33px);line-height:1.2;letter-spacing:-.04em;font-weight:500;margin:0 0 24px;text-wrap:balance}
+.essay p{font-size:17px;line-height:1.8;color:#b9bbb4;margin:0 0 20px}
+.essay p:last-child{margin-bottom:0}
+.commitment{background:var(--paper);color:#161713;margin:0 calc(-1 * var(--gutter));padding:48px var(--gutter) 64px}
+.commitment-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:50px}
+.commitment-heading p{margin:0;font-size:14px}
+.commitment-heading>span{font-size:50px;line-height:1}
+.commitment h2{font-size:clamp(45px,6.6vw,108px);font-weight:450;line-height:1.08;letter-spacing:-.06em;margin:0 0 44px}
+.commitment-bottom{display:flex;align-items:end;justify-content:space-between;gap:48px}
+.commitment-bottom p{font-size:17px;line-height:1.7;max-width:560px;margin:0;color:#4c4f46}
+.commitment-bottom a{border-bottom:1px solid #74776e;padding:14px 0;white-space:nowrap;font-size:14px}
+.commitment-bottom a span{margin-left:25px}
+.commitment-bottom a:hover{border-color:#161713;background:#e4e4dc}
+@media(min-width:1700px){.thesis-opening,.thesis-body{max-width:1600px;margin-inline:auto}.commitment{padding-inline:max(var(--gutter),calc((100vw - 1600px)/2))}}
+@media(max-width:1000px){.hero{min-height:max(620px,calc(100svh - 96px))}.thesis-body{gap:7%}.thesis-intro{gap:6%}.counterpart{top:32px}.essay p{font-size:16px}.commitment-bottom{gap:32px}.commitment-bottom p{max-width:470px}}
+@media(max-width:700px){
+  .thesis-opening{padding:40px 0 48px}.vision-label{margin-bottom:35px}
+  .thesis-intro{grid-template-columns:1fr;gap:30px}.thesis-intro h2{font-size:clamp(46px,14.4vw,84px)}.thesis-intro>p{max-width:440px;font-size:19px}
+  .thesis-body{grid-template-columns:1fr;gap:48px;padding:36px 0 64px}.counterpart{position:relative;top:auto;max-width:none}.counterpart-art{height:260px;max-width:390px;margin:auto}.counterpart-word,.counterpart-echo{font-size:164px}.counterpart figcaption{font-size:25px}.world-connection{margin-top:26px;max-width:390px}.counterpart-note{margin-top:16px}.essay{max-width:none}.essay section+section{margin-top:42px}.essay h3{font-size:27px;margin-bottom:18px}
+  .commitment{padding-top:32px;padding-bottom:44px}.commitment-heading{margin-bottom:36px}.commitment-heading>span{font-size:36px}.commitment h2{font-size:clamp(36px,7.4vw,52px);margin-bottom:30px}.commitment-bottom{align-items:start;flex-direction:column;gap:24px}.commitment-bottom p{font-size:16px}
+}
+@media(max-width:600px){.hero{min-height:max(620px,calc(100svh - 88px))}.thesis-nav{font-size:12px}.thesis-nav span{margin-left:8px}.hero-read{font-size:12px;bottom:28px}.counterpart-word,.counterpart-echo{font-size:clamp(134px,36vw,164px)}}
