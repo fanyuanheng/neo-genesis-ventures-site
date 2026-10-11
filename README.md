@@ -1,6 +1,6 @@
 # Neo Genesis Ventures
 
-A minimal brand website for Neo Genesis Ventures, focused on AI and energy.
+A minimal brand website for Neo Genesis Ventures, an investor and builder of AI and energy ventures.
 
 ## Run locally
 
