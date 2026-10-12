@@ -1,3 +1,5 @@
+import { createHeroMotion } from './hero-motion.js';
+
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const controls = document.querySelectorAll('[data-motion-toggle]');
 let paused = false;
@@ -16,77 +18,90 @@ function createWorlds(canvas) {
   let tiltX = 0;
   let tiltY = 0;
 
-  function project(world, x, y, z) {
-    x += world === 0 ? -0.98 : 0.98;
-    y += world === 0 ? -0.18 : 0.18;
-    const angle = 0.18 + tiltX;
-    const px = x * Math.cos(angle) + z * Math.sin(angle);
-    const pz = z * Math.cos(angle) - x * Math.sin(angle);
-    const py = y * Math.cos(0.3 + tiltY) - pz * Math.sin(0.3 + tiltY);
-    const scale = Math.min(width / 3.9, height / 2.65);
-    return [width / 2 + (px * 0.99 - py * 0.14) * scale,
-      height / 2 + (px * 0.14 + py * 0.99) * scale, pz];
+  const segments = 160;
+  const strands = 25;
+
+  function project(x, y, z) {
+    const turn = -0.2 + tiltX;
+    const px = x * Math.cos(turn) + z * Math.sin(turn);
+    const depth = z * Math.cos(turn) - x * Math.sin(turn);
+    const py = y * Math.cos(0.48 + tiltY) - depth * Math.sin(0.48 + tiltY);
+    const scale = Math.min(width / 4.15, height / 2.8);
+    return [width / 2 + (px * 0.98 + py * 0.18) * scale,
+      height / 2 + (py * 0.98 - px * 0.18) * scale, depth];
   }
 
-  function point(world, longitude, latitude) {
-    return project(world, 0.8 * Math.cos(latitude) * Math.cos(longitude),
-      0.8 * Math.sin(latitude), 0.8 * Math.cos(latitude) * Math.sin(longitude));
+  // One continuous surface changes material across two connected worlds.
+  function point(u, v) {
+    const breath = 1 + Math.sin(time * 0.5) * 0.025;
+    const ripple = Math.sin(u * 3 - time * 0.65) * 0.045;
+    return project(
+      (1.42 + v * 0.6) * Math.cos(u) * breath,
+      0.64 * Math.sin(u * 2) + v * Math.sin(u) + ripple,
+      0.62 * Math.sin(u) + v * Math.cos(u * 2),
+    );
+  }
+
+  function line(a, b, color, lineWidth = 0.65) {
+    ctx.beginPath();
+    ctx.moveTo(a[0], a[1]);
+    ctx.lineTo(b[0], b[1]);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
   }
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
     tiltX += (pointerX - tiltX) * 0.06;
     tiltY += (pointerY - tiltY) * 0.06;
-    // The same geometry takes two forms: a continuous lattice and discrete nodes.
-    for (let world = 0; world < 2; world++) {
-      const rotation = time * (world === 0 ? 0.055 : -0.075);
-      ctx.lineWidth = 0.65;
-      for (let meridian = 0; meridian < 28; meridian++) {
-        const u = meridian / 28 * Math.PI * 2 + rotation;
-        ctx.beginPath();
-        for (let step = 0; step <= 64; step++) {
-          const p = point(world, u, -Math.PI / 2 + step / 64 * Math.PI);
-          if (step === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]);
-        }
-        ctx.strokeStyle = world === 0 ? 'rgba(226,231,219,0.27)' : 'rgba(226,231,219,0.12)';
-        ctx.stroke();
-      }
-      for (let latitude = 1; latitude < 22; latitude++) {
-        const v = -Math.PI / 2 + latitude / 22 * Math.PI;
-        ctx.beginPath();
-        for (let step = 0; step <= 96; step++) {
-          const p = point(world, step / 96 * Math.PI * 2, v);
-          if (step === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]);
-        }
-        ctx.strokeStyle = world === 0 ? 'rgba(226,231,219,0.23)' : 'rgba(255,132,92,0.2)';
-        ctx.stroke();
-        if (world === 1) {
-          for (let node = 0; node < 36; node++) {
-            const p = point(world, node / 36 * Math.PI * 2 + rotation, v);
-            ctx.fillStyle = p[2] > 0 ? 'rgba(245,239,222,0.72)' : 'rgba(245,239,222,0.2)';
-            ctx.fillRect(p[0] - 0.7, p[1] - 0.7, 1.4, 1.4);
+    const mesh = Array.from({ length: segments + 1 }, (_, i) => {
+      const u = i / segments * Math.PI * 2;
+      return Array.from({ length: strands }, (_, j) => point(u, (j / (strands - 1) - 0.5) * 0.8));
+    });
+    // Paint the back first so the crossing reads as a folded, dimensional ribbon.
+    const bands = Array.from({ length: segments }, (_, i) => i)
+      .sort((a, b) => mesh[a][12][2] - mesh[b][12][2]);
+    for (const i of bands) {
+      const u = (i + 0.5) / segments * Math.PI * 2;
+      const digital = Math.cos(u) > 0;
+      const illumination = 0.55 + (mesh[i][12][2] + 1) * 0.18;
+      // A shared pulse circles the whole surface, linking both visual materials.
+      const pulse = Math.pow((1 + Math.cos(u - time * 0.48)) / 2, 18);
+      for (let j = 0; j < strands; j++) {
+        const p = mesh[i][j];
+        const q = mesh[i + 1][j];
+        if (digital) {
+          if (j % 2 === 0) {
+            line(p, q, `rgba(255,142,87,${0.28 * illumination + pulse * 0.22})`);
+            if (j + 2 < strands && i % 2 === 0) {
+              line(p, mesh[i + 1][j + 2], `rgba(255,142,87,${0.18 * illumination})`, 0.5);
+              line(p, mesh[i][j + 2], `rgba(255,142,87,${0.26 * illumination})`, 0.5);
+            }
+            if (i % 2 === 0) {
+              const size = 0.8 + pulse * 1.1;
+              ctx.fillStyle = `rgba(255,203,148,${0.5 + pulse * 0.5})`;
+              ctx.fillRect(p[0] - size / 2, p[1] - size / 2, size, size);
+            }
           }
+        } else {
+          const edge = Math.sin(j / (strands - 1) * Math.PI);
+          line(p, q, `rgba(233,232,220,${(0.28 + edge * 0.3) * illumination + pulse * 0.15})`, 0.8);
         }
       }
     }
-    // Signals travel both ways between corresponding points on the two worlds.
-    for (let lane = 0; lane < 7; lane++) {
-      const latitude = (lane - 3) * 0.17;
-      const a = point(0, 0.22, latitude);
-      const b = point(1, Math.PI - 0.22, latitude);
+    // Moving traces pass continuously from organic lines into the digital lattice.
+    for (let i = 0; i < 18; i++) {
+      const direction = i % 2 ? 1 : -1;
+      const u = i * 2.39996 + time * 0.22 * direction;
+      const v = ((i * 0.618) % 1 - 0.5) * 0.75;
+      const p = point(u, v);
+      const tail = point(u - 0.032 * direction, v);
+      const digital = Math.cos(u) > 0;
+      line(tail, p, digital ? '#ffb079' : '#eeeadd', 1.4);
+      ctx.fillStyle = digital ? '#ffd3a6' : '#fff7e6';
       ctx.beginPath();
-      ctx.moveTo(a[0], a[1]);
-      ctx.lineTo(b[0], b[1]);
-      ctx.strokeStyle = 'rgba(255,113,65,0.3)';
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-      let progress = (time * 0.18 + lane / 7) % 1;
-      if (lane % 2) progress = 1 - progress;
-      const x = a[0] + (b[0] - a[0]) * progress;
-      const y = a[1] + (b[1] - a[1]) * progress;
-      ctx.fillStyle = '#ff835d';
-      ctx.beginPath();
-      ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+      ctx.arc(p[0], p[1], 1.25, 0, Math.PI * 2);
       ctx.fill();
     }
   }
@@ -137,7 +152,10 @@ function createWorlds(canvas) {
   return syncMotion;
 }
 
-const animations = [...document.querySelectorAll('[data-worlds]')].map(createWorlds);
+const animations = [
+  createHeroMotion(document.querySelector('#field'), reducedMotion, () => paused),
+  ...[...document.querySelectorAll('[data-worlds]')].map(createWorlds),
+];
 function syncMotion() {
   controls.forEach(button => {
     button.hidden = reducedMotion.matches;
