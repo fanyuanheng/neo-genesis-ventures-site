@@ -23,12 +23,13 @@
   </header>
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="art" aria-hidden="true"><canvas id="field"></canvas><div class="art-halo"></div></div>
+      <div class="art" aria-hidden="true"><canvas id="field" data-worlds></canvas><div class="art-halo"></div></div>
       <div class="hero-content">
         <h1 id="hero-title">Backing<br><span class="next">what's next<span class="period">.</span></span></h1>
-        <p class="hero-description">Investing in and building ambitious ventures<br>in AI and energy.</p>
+        <p class="hero-description">Investing in and building ambitious ventures<br> in AI and energy.</p>
       </div>
       <a class="hero-read" href="#thesis">A vision for what comes next <span aria-hidden="true">↓</span></a>
+      <button class="motion-toggle hero-motion" type="button" data-motion-toggle hidden>Pause motion</button>
     </section>
     <article class="thesis" id="thesis" aria-labelledby="thesis-title">
       <header class="thesis-opening">
@@ -42,15 +43,18 @@
       <div class="thesis-body">
         <figure class="counterpart">
           <div class="counterpart-art" aria-hidden="true">
-            <span class="counterpart-echo" lang="zh">分身</span>
-            <span class="counterpart-word" lang="zh">分身</span>
-            <span class="connection-point"></span>
+            <canvas id="counterpart-field" data-worlds></canvas>
           </div>
-          <figcaption><span lang="zh">分身</span> <span class="pronunciation">fēn shēn</span><br>A living counterpart.</figcaption>
+          <figcaption>
+            <div class="counterpart-caption">
+              <span>A living counterpart.</span>
+              <button class="motion-toggle" type="button" data-motion-toggle hidden>Pause motion</button>
+            </div>
           <div class="world-connection" aria-label="The human world and AI world, connected in both directions">
             <span>Human world</span><span class="connection-line" aria-hidden="true">↔</span><span>AI world</span>
           </div>
           <p class="counterpart-note">An extension of human possibility.<br>A world with agency of its own.</p>
+          </figcaption>
         </figure>
 
         <div class="essay">
@@ -62,8 +66,8 @@
           </section>
           <section aria-labelledby="counterpart-title">
             <h3 id="counterpart-title">Reality, with a counterpart.</h3>
-            <p>There is a Chinese idea that captures this possibility: <span lang="zh">分身</span>. Another embodiment of oneself, able to act beyond the limits of a single presence.</p>
-            <p>The AI world could become a living counterpart to human reality. A place where human knowledge and ambition can take on an independent life—learning, experimenting and bringing useful discoveries back into the physical world.</p>
+            <p>A counterpart carries something of its origin into another world. Connected to the same purpose, it can develop capabilities and act with agency of its own.</p>
+            <p>Imagine human knowledge and ambition taking on an independent life in the AI world. A living counterpart that learns, experiments and creates—and brings discoveries back into the physical world.</p>
             <p>Money enables exchange in the human economy. Tokens offer an early metaphor for the currency of the AI world: units through which intelligence is accessed and consumed. The longer-term vision is an economy where autonomous systems can obtain resources, coordinate work and exchange value.</p>
           </section>
           <section aria-labelledby="bridge-title">
